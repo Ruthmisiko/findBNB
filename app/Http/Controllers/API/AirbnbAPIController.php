@@ -28,7 +28,13 @@ class AirbnbAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $airbnbs = $this->airbnbRepository->with(['area','host','roomType'])->paginate(20);
+        $query = $this->airbnbRepository->model()::with(['area.county','host','roomType']);
+        
+        if ($request->has('area_id') && $request->area_id) {
+            $query->where('area_id', $request->area_id);
+        }
+        
+        $airbnbs = $query->paginate(20);
 
         return $this->sendResponse($airbnbs->toArray(), 'Airbnbs retrieved successfully');
     }
@@ -53,7 +59,7 @@ class AirbnbAPIController extends AppBaseController
     public function show($id): JsonResponse
     {
         /** @var Airbnb $airbnb */
-        $airbnb = $this->airbnbRepository->find($id);
+        $airbnb = Airbnb::with(['area.county','host','roomType'])->find($id);
 
         if (empty($airbnb)) {
             return $this->sendError('Airbnb not found');
