@@ -28,3 +28,9 @@ Route::resource('room-types', App\Http\Controllers\API\RoomTypeAPIController::cl
 Route::resource('airbnbs', App\Http\Controllers\API\AirbnbAPIController::class);
 
 Route::resource('host-details', App\Http\Controllers\API\HostDetailAPIController::class);
+
+Route::resource('payments', App\Http\Controllers\API\PaymentAPIController::class);
+
+Route::post('/payment/{hostId}', [App\Http\Controllers\API\PaymentAPIController::class, 'pay']);
+
+Route::post('/mpesa/callback', [App\Http\Controllers\API\PaymentAPIController::class, 'callback'])->name('mpesa.callback');
