@@ -96,7 +96,7 @@ public function paginate(int $perPage = 15): LengthAwarePaginator
      */
     public function find(int $id): ?Model
     {
-        return $this->model->find($id);
+        return $this->query->find($id);
     }
 
     /**

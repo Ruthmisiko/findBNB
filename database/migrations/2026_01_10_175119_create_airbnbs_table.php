@@ -22,18 +22,6 @@ return new class extends Migration
             $table->integer('room_type_id');
             $table->decimal('price', 10, 2);
 
-            $table->foreignId('area_id')
-                ->constrained('areas')
-                ->cascadeOnDelete();
-
-            $table->foreignId('host_id')
-                ->constrained('host_details')
-                ->cascadeOnDelete();
-
-            $table->foreignId('room_type_id')
-                ->constrained('room_types');
-                    $table->timestamps();
-
         });
     }
 

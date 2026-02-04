@@ -20,6 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::resource('counties', App\Http\Controllers\API\CountyAPIController::class);
+Route::get('counties/{id}/areas', function ($id) {
+    $county = \App\Models\County::with('areas')->find($id);
+    if (empty($county)) {
+        return response()->json(['success' => false, 'message' => 'County not found'], 404);
+    }
+    return response()->json(['success' => true, 'data' => $county->areas]);
+});
 
 Route::resource('areas', App\Http\Controllers\API\AreaAPIController::class);
 
@@ -34,3 +41,9 @@ Route::resource('payments', App\Http\Controllers\API\PaymentAPIController::class
 Route::post('/payment/{hostId}', [App\Http\Controllers\API\PaymentAPIController::class, 'pay']);
 
 Route::post('/mpesa/callback', [App\Http\Controllers\API\PaymentAPIController::class, 'callback'])->name('mpesa.callback');
+// Admin Authentication
+Route::post('admin/login', [App\Http\Controllers\API\AdminAuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('admin/me', [App\Http\Controllers\API\AdminAuthController::class, 'me']);
+    Route::post('admin/logout', [App\Http\Controllers\API\AdminAuthController::class, 'logout']);
+});
